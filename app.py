@@ -56,13 +56,17 @@ def generate_node(state: QAState) -> QAState:
         temperature=0,
     )
     context = "\n\n".join(state["retrieved_docs"])
-    prompt = f"""You are a research assistant. 
-        Answer the question based only on the context below.
+    prompt = f"""
+        You are a research assistant. 
+        Answer the question strictly from the context below.
+        If the answer is not in the context, reply: "Not found in document."
+
         Context:
         {context}
 
         Question: {state['question']}
-        Answer:"""
+        Answer:
+    """
     result = llm.invoke(prompt)
     return {**state, "answer": result.content}
 
